@@ -37,7 +37,7 @@ const App: React.FC = () => {
       return;
     }
 
-    // otherwise fetch items from API
+    // otherwise fetch items from API (using herokuapp.com to bypass CORS)
     fetch('https://cors-anywhere.herokuapp.com/https://api.workoutme.app/api/feed/get/')
       .then(response => response.json())
       .then(items => {
@@ -71,12 +71,14 @@ const App: React.FC = () => {
       })
     : [];
 
+    // format created date to human readable format
     const formatCreated = (created: { _seconds: number; _nanoseconds: number }) => {
       const date = new Date(created._seconds * 1000 + created._nanoseconds / 1000000);
       return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
     };
   
-  if(!sortedItems) return <div>Loading, wait please</div>;
+  // show loading message if items are not loaded yet  
+  if(items.length === 0) return <div>Loading, wait please</div>;
     
   return (
     <div className={classes.root}>
@@ -93,8 +95,8 @@ const App: React.FC = () => {
             Created: {formatCreated(item.created)}
           </ListItem>
       ))}
-    </List>
-  </div>
+      </List>
+    </div>
 );
 };
     
